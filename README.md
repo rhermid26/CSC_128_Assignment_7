@@ -1,5 +1,6 @@
 # Tool Safety Scenarios
 
+
 ## 1. Function I did not write
 
 I did not make an `unbook_room` function. If the chatbot had this function, it could remove someone's booking by mistake. I only made a `book_room` function that books a room and removes it from the available rooms.
@@ -23,6 +24,26 @@ def test_unknown_tool():
 This shows that a tool that does not exist will not be used.
 
 ## 3. Tool description I changed
+
+First off I changed the way I handle resevations. I made a constant variable
+called `DEFAULT_AVAILABILITY` that is how the availabilities will be stored as
+its original data.
+
+I had to clone that into a single variable `current_availabilities` to avoid
+modifying the default data.
+
+Simply setting
+
+```python
+current_availabilities = DEFAULT_AVAILABILITY
+```
+
+Will NOT work as intended. What I'm doing here is setting a reference to the constant
+and any changes I make in `current_availabilities` will be reflected on the constant variable
+which we don't want.
+
+That way I can reset the `current_availabilities` to the way it is set in the
+`DEFAULT_AVAILABILITY` constant variable.
 
 My first description for `check_availability` was too short:
 
