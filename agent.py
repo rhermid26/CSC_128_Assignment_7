@@ -2,7 +2,7 @@
 import json
 import os
 from groq import Groq
-from tools import TOOL_SCHEMAS, AVAILABLE_TOOLS
+from tools import TOOL_SCHEMAS, AVAILABLE_TOOLS, reset_availabilities
 
 client = Groq(api_key=os.environ["GROQ_API_KEY"])
 

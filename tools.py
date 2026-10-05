@@ -3,7 +3,9 @@ CSC-128 Assignment 7 starter: the tools and their schemas
 Roberto Hermida Lujan
 """
 
-AVAILABILITY = {
+
+# Constants should never ever be modified
+DEFAULT_AVAILABILITY = {
     "monday": {
         "rooms" : [
             "214", 
@@ -49,17 +51,32 @@ AVAILABILITY = {
     }
 }
 
+# Constants can technically be treated as regular variables 
+# But it is a good convention to manually clone them
+current_availabilities = {}
+
+
+# This will reset the current availabilities
+def reset_availabilities():
+    current_availabilities.clear();
+    for key, value in DEFAULT_AVAILABILITY.items():
+        current_availabilities[key] = {
+            "rooms" : list(DEFAULT_AVAILABILITY[key]["rooms"]),
+            "hours" : list(DEFAULT_AVAILABILITY[key]["hours"])
+        }
+
+reset_availabilities();
 
 def check_availability(day):
     """Return the rooms free on a given weekday."""
-    free = AVAILABILITY.get(day.lower(), {})
+    free = current_availabilities.get(day.lower(), {})
     if not free:
         return f"No study rooms are available on {day}."
     return f"Available on {day}: " + ", ".join(free["rooms"])
 
 def get_hours(day):
     """TODO 3: return the opening hours for a weekday."""
-    free = AVAILABILITY.get(day.lower(), {})
+    free = current_availabilities.get(day.lower(), {})
     if not free:
         return f"No opening hours are available on {day}."
     return f"Opening hours on {day}: " + ", ".join(free["hours"])
@@ -71,7 +88,18 @@ def book_room(day, room, name):
     Think about what this function should NOT be able to do before you
     write it. Do not add a delete function.
     """
-    return ""
+    day = day.lower()
+    room = str(room)
+
+    if day not in current_availabilities:
+        return f"{day} is not a valid weekday."
+
+    if room not in current_availabilities[day]["rooms"]:
+        return f"Room {room} is not available on {day}."
+
+    current_availabilities[day]["rooms"].remove(room)
+
+    return f"Room {room} has been booked for {name} on {day}."
 
 AVAILABLE_TOOLS = {
     "check_availability" : check_availability,
@@ -118,5 +146,30 @@ TOOL_SCHEMAS = [
                 "required": ["day"],
             },
         },
-    }
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "book_room",
+            "description": "Book an available study room for a student.",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "day": {
+                        "type": "string",
+                        "description": "Weekday name, for example Monday",
+                    },
+                    "room": {
+                        "type": "string",
+                        "description": "Study room number, for example 214",
+                    },
+                    "name": {
+                        "type": "string",
+                        "description": "Student's name",
+                    },
+                },
+                "required": ["day", "room", "name"],
+            },
+        },
+    },
 ]
