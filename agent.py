@@ -26,7 +26,23 @@ def run_agent(messages):
         if not message.tool_calls:
             return message.content
 
-        messages.append(message)
+        #messages.append(message.model_dump())
+
+        messages.append({
+            "role": "assistant",
+            "content": message.content,
+            "tool_calls": [
+                {
+                    "id": call.id,
+                    "type": "function",
+                    "function": {
+                        "name": call.function.name,
+                        "arguments": call.function.arguments,
+                    },
+                }
+                for call in message.tool_calls
+            ],
+        })
 
         for call in message.tool_calls:
             name = call.function.name

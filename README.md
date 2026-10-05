@@ -1,6 +1,5 @@
 # Tool Safety Scenarios
 
-
 ## 1. Function I did not write
 
 I did not make an `unbook_room` function. If the chatbot had this function, it could remove someone's booking by mistake. I only made a `book_room` function that books a room and removes it from the available rooms.
@@ -60,3 +59,6 @@ Check which study rooms are free on a given weekday. Use this whenever a student
 ```
 
 This makes it clearer when the model should use the tool.
+
+One last thing I had to change was the `agent.py` script. It was giving me the
+`ChatCompletion` error regarding it not be subscribable.

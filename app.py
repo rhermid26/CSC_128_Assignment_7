@@ -6,6 +6,7 @@ st.title("Study Room Assistant")
 
 st.caption("You are chatting with an automated assistant, not a person.")
 
+
 # Store the conversation
 if "messages" not in st.session_state:
     st.session_state.messages = []
@@ -32,7 +33,7 @@ if prompt := st.chat_input("Ask about study rooms..."):
     # Get assistant response
     with st.chat_message("assistant"):
         try:
-            response = run_agent(st.session_state.messages)
+            response = run_agent(st.session_state.messages.copy())
 
             st.write(response)
 
